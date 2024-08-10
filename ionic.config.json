@@ -1,0 +1,7 @@
+{
+  "name": "taller1_movile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
