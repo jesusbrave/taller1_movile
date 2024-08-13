@@ -3,8 +3,15 @@
     <ion-title>
       BRAVE APP
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge *ngIf="tasks.length > 0" color="danger">{{ tasks.length }}</ion-badge>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content padding>
   <ion-card>
@@ -13,34 +20,34 @@
         <ion-row>
           <ion-col>
             <ion-input
-              name="titulo"
-              [(ngModel)]="titulo"
-              #tituloInput="ngModel"
+              name="title"
+              [(ngModel)]="title"
+              #titleInput="ngModel"
               class="b-bottom"
-              placeholder="Título..."
+              placeholder="Title..."
               minlength="3"
               required
             ></ion-input>
-            <div *ngIf="tituloInput.invalid && (tituloInput.dirty || tituloInput.touched)">
-              <div *ngIf="tituloInput.errors?.['required']">El título es obligatorio!</div>
-              <div *ngIf="tituloInput.errors?.['minlength']">El título debe tener minimo 3 caracteres!</div>
+            <div *ngIf="titleInput.invalid && (titleInput.dirty || titleInput.touched)">
+              <div *ngIf="titleInput.errors?.['required']">Title is required!</div>
+              <div *ngIf="titleInput.errors?.['minlength']">The title must have at least 3 characters!</div>
             </div>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
             <ion-input
-              name="descripcion"
-              [(ngModel)]="descripcion"
-              #descripcionInput="ngModel"
+              name="description"
+              [(ngModel)]="description"
+              #descriptionInput="ngModel"
               class="b-bottom"
-              placeholder="Descripción..."
+              placeholder="Description..."
               minlength="10"
               required
             ></ion-input>
-            <div *ngIf="descripcionInput.invalid && (descripcionInput.dirty || descripcionInput.touched)">
-              <div *ngIf="descripcionInput.errors?.['required']">La descripción es obligatoria!</div>
-              <div *ngIf="descripcionInput.errors?.['minlength']">La descripción debe tener minimo 10 caracteres!</div>
+            <div *ngIf="descriptionInput.invalid && (descriptionInput.dirty || descriptionInput.touched)">
+              <div *ngIf="descriptionInput.errors?.['required']">Description is required!</div>
+              <div *ngIf="descriptionInput.errors?.['minlength']">The description must have at least 10 characters!</div>
             </div>
           </ion-col>
         </ion-row>
@@ -52,18 +59,16 @@
               expand="block"
               [disabled]="!myForm.valid"
             >
-              Enviar
+              {{ editingIndex !== null ? 'Update' : 'Add' }}
             </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </form>
   </ion-card>
-
-
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Mis notas📝</ion-card-title>
+      <ion-card-title>My tasks📝</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list *ngIf="tasks.length > 0; else noTasks">
@@ -71,7 +76,7 @@
           <ion-item>
             <ion-label [ngClass]="{ 'done': task.done }">
               <h2>{{ task.titulo }}</h2>
-              <p>{{ task.descripcion }}</p>
+              <p>{{ task.description }}</p>
             </ion-label>
             <ion-checkbox
               slot="end"
@@ -79,22 +84,24 @@
               (ionChange)="toggleDone(i)"
             ></ion-checkbox>
           </ion-item>
-
-          
-        
+  
           <ion-item-options side="end">
             <ion-item-option color="danger" (click)="deleteTask(i)">
               <ion-icon name="trash"></ion-icon>
-              Eliminar
+              Delete
+            </ion-item-option>
+            <ion-item-option color="primary" (click)="editTask(i)">
+              <ion-icon name="pencil"></ion-icon>
+              Edit
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
       <ng-template #noTasks>
         <ion-item>
-          <ion-label>No hay notas disponibles☹️</ion-label>
+          <ion-label>There are no tasks yet☹️</ion-label>
         </ion-item>
       </ng-template>
     </ion-card-content>
   </ion-card>
-</ion-content>
+  

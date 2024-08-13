@@ -7,27 +7,28 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  titulo: string = '';
-  descripcion: string = '';
-  tasks: { titulo: string; descripcion: string; done: boolean }[] = [];
+  title: string = '';
+  description: string = '';
+  tasks: { titulo: string; description: string; done: boolean }[] = [];
+  editingIndex: number | null = null;
 
   constructor() {}
 
   onSubmit(form: NgForm) {
-    if (this.titulo && this.descripcion) {
+    if (this.title && this.description) {
+      const formattedTitle = this.title.trim();
+      const formattedDescription = this.description.trim();
 
-      const formattedTitulo = (this.titulo.trim());
-      const formattedDescripcion = (this.descripcion.trim());
-
-      this.tasks.push({ titulo: formattedTitulo, descripcion: formattedDescripcion, done: false });
-
-      console.log('Título (formateado):', formattedTitulo);
-      console.log('Descripción (formateada):', formattedDescripcion);
+      if (this.editingIndex !== null) {
+        this.tasks[this.editingIndex] = { titulo: formattedTitle, description: formattedDescription, done: this.tasks[this.editingIndex].done };
+        this.editingIndex = null;
+      } else {
+        this.tasks.push({ titulo: formattedTitle, description: formattedDescription, done: false });
+      }
 
       form.reset();
     }
   }
-
 
   toggleDone(index: number) {
     this.tasks[index].done = !this.tasks[index].done;
@@ -35,5 +36,18 @@ export class HomePage {
 
   deleteTask(index: number) {
     this.tasks.splice(index, 1);
+    if (this.editingIndex === index) {
+      this.editingIndex = null; 
+    }
+  }
+
+  editTask(index: number) {
+    this.title = this.tasks[index].titulo;
+    this.description = this.tasks[index].description;
+    this.editingIndex = index;
+  }
+
+  showNotifications() {
+    console.log('Notifications: ', this.tasks.length);
   }
 }
